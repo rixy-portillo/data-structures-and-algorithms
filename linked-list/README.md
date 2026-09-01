@@ -14,26 +14,25 @@ Tail: The final node, which points to NULL to signify the end.
 - `removeHead()`
 - `printList()`
 
-## Time Complexity
-
-| Method | Time Complexity | Why |
-| addToHead | O(1) | We only update the head |
-| addToTail | O(n) | We may need to traverse the whole list |
-| removeHead | O(1) | We only move the head pointer |
-| printList | O(n) | We visit every node |
-
-## Space Complexity
-
-| Method | Space Complexity | Why |
-| addToHead | O(1) | Creates one node |
-| addToTail | O(1) | Creates one node |
-| removeHead | O(1) | No extra data structure |
-| printList | O(n) | Builds an output string and it grows as the list grows |
-
 ## Advantages
-Dynamic Sizing: No need to predict how much memory to allocate ahead of time.
-Efficient Modifications: Inserting or deleting items at the head takes O(1) constant time.
+
+- Dynamic Sizing: No need to predict how much memory to allocate ahead of time.
+- Efficient Modifications: Inserting or deleting items at the head takes O(1) constant time.
 
 ## Disadvantages
-No Random Access: Finding a specific index requires starting from the head and walking through every item sequentially.
-Poor Cache Locality: Because nodes sit randomly in memory, modern CPUs cannot easily pre-fetch them, making access patterns slower than arrays.
+
+- No Random Access: Finding a specific index requires starting from the head and walking through every item sequentially.
+- Poor Cache Locality: Because nodes sit randomly in memory, modern CPUs cannot easily pre-fetch them, making access patterns slower than arrays.
+
+## When Is a Singly Linked List Useful?
+
+A singly linked list is useful when data needs to be processed primarily in one direction and frequent insertion or removal at the beginning of the structure is needed.
+
+Examples include:
+
+- Implementing stacks
+- Implementing queues when both head and tail references are maintained
+- Maintaining a sequence of tasks or items that are processed in order
+- Implementing adjacency lists for graphs
+- Situations where frequent insertion or deletion is needed and random access is not important
+- Situations where memory usage matters and backward traversal is unnecessary
