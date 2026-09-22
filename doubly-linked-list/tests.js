@@ -1,60 +1,168 @@
+import assert from 'node:assert/strict';
 import DoublyLinkedList from './DoublyLinkedList.js';
 
-const list = new DoublyLinkedList();
+function runTests() {
+    console.log('Running doubly linked list tests...\n');
 
-console.log('Empty list:');
-list.printList();
+    // Test creating an empty list
+    const emptyList = new DoublyLinkedList();
 
-console.log('\nAdd A to head:');
-list.addToHead('A');
-list.printList();
+    assert.equal(emptyList.head, null);
+    assert.equal(emptyList.tail, null);
+    assert.equal(emptyList.removeHead(), undefined);
+    assert.equal(emptyList.removeTail(), undefined);
 
-console.log('\nAdd B to head:');
-list.addToHead('B');
-list.printList();
+    // Test addToHead()
+    const headList = new DoublyLinkedList();
 
-console.log('\nAdd C to tail:');
-list.addToTail('C');
-list.printList();
+    headList.addToHead('A');
 
-console.log('\nRemove head:');
-console.log('Removed:', list.removeHead());
-list.printList();
+    assert.equal(headList.head.data, 'A');
+    assert.equal(headList.tail.data, 'A');
+    assert.equal(headList.head, headList.tail);
 
-console.log('\nRemove tail:');
-console.log('Removed:', list.removeTail());
-list.printList();
+    headList.addToHead('B');
 
-console.log('\nAdd more nodes:');
-list.addToHead('A');
-list.addToTail('C');
-list.addToTail('D');
-list.printList();
+    assert.equal(headList.head.data, 'B');
+    assert.equal(headList.tail.data, 'A');
+    assert.equal(headList.head.getNextNode().data, 'A');
+    assert.equal(
+        headList.tail.getPreviousNode().data,
+        'B'
+    );
+    assert.equal(headList.head.getPreviousNode(), null);
+    assert.equal(headList.tail.getNextNode(), null);
 
-console.log('\nRemove C:');
-console.log('Removed:', list.removeByData('C'));
-list.printList();
+    // Test addToTail()
+    const tailList = new DoublyLinkedList();
 
-console.log('\nTry removing something that does not exist:');
-console.log('Removed:', list.removeByData('X'));
-list.printList();
+    tailList.addToTail('A');
 
-// Empty list
-const emptyList = new DoublyLinkedList();
+    assert.equal(tailList.head.data, 'A');
+    assert.equal(tailList.tail.data, 'A');
+    assert.equal(tailList.head, tailList.tail);
 
-console.log(emptyList.removeHead());
-console.log(emptyList.removeTail());
+    tailList.addToTail('B');
+    tailList.addToTail('C');
 
+    assert.equal(tailList.head.data, 'A');
+    assert.equal(tailList.tail.data, 'C');
 
-// One-node list
-const oneNodeList = new DoublyLinkedList();
+    assert.equal(
+        tailList.head.getNextNode().data,
+        'B'
+    );
 
-oneNodeList.addToHead('A');
+    assert.equal(
+        tailList.tail.getPreviousNode().data,
+        'B'
+    );
 
-console.log(oneNodeList.head);
-console.log(oneNodeList.tail);
+    assert.equal(
+        tailList.head
+            .getNextNode()
+            .getPreviousNode()
+            .data,
+        'A'
+    );
 
-oneNodeList.removeHead();
+    assert.equal(
+        tailList.tail
+            .getPreviousNode()
+            .getNextNode()
+            .data,
+        'C'
+    );
 
-console.log(oneNodeList.head);
-console.log(oneNodeList.tail);
+    // Test removeHead()
+    assert.equal(tailList.removeHead(), 'A');
+
+    assert.equal(tailList.head.data, 'B');
+    assert.equal(tailList.head.getPreviousNode(), null);
+    assert.equal(tailList.tail.data, 'C');
+
+    // Test removeTail()
+    assert.equal(tailList.removeTail(), 'C');
+
+    assert.equal(tailList.head.data, 'B');
+    assert.equal(tailList.tail.data, 'B');
+    assert.equal(tailList.tail.getNextNode(), null);
+
+    // Test removing the only node with removeHead()
+    assert.equal(tailList.removeHead(), 'B');
+    assert.equal(tailList.head, null);
+    assert.equal(tailList.tail, null);
+
+    // Test removing the only node with removeTail()
+    const oneNodeList = new DoublyLinkedList();
+
+    oneNodeList.addToTail('A');
+
+    assert.equal(oneNodeList.removeTail(), 'A');
+    assert.equal(oneNodeList.head, null);
+    assert.equal(oneNodeList.tail, null);
+
+    // Test removeByData() on a middle node
+    const removalList = new DoublyLinkedList();
+
+    removalList.addToTail('A');
+    removalList.addToTail('B');
+    removalList.addToTail('C');
+
+    const removedMiddle =
+        removalList.removeByData('B');
+
+    assert.equal(removedMiddle.data, 'B');
+    assert.equal(removalList.head.data, 'A');
+    assert.equal(removalList.tail.data, 'C');
+
+    assert.equal(
+        removalList.head.getNextNode(),
+        removalList.tail
+    );
+
+    assert.equal(
+        removalList.tail.getPreviousNode(),
+        removalList.head
+    );
+
+    // Test removeByData() on the head
+    const removedHead =
+        removalList.removeByData('A');
+
+    assert.equal(removedHead.data, 'A');
+    assert.equal(removalList.head.data, 'C');
+    assert.equal(
+        removalList.head.getPreviousNode(),
+        null
+    );
+
+    // Test removeByData() on the tail
+    const removedTail =
+        removalList.removeByData('C');
+
+    assert.equal(removedTail.data, 'C');
+    assert.equal(removalList.head, null);
+    assert.equal(removalList.tail, null);
+
+    // Test removeByData() when data is not found
+    assert.equal(
+        removalList.removeByData('missing'),
+        null
+    );
+
+    // Visually test printList()
+    const printList = new DoublyLinkedList();
+
+    printList.addToTail('A');
+    printList.addToTail('B');
+    printList.addToTail('C');
+
+    console.log('\nExpected: <head> A B C <tail>');
+    console.log('Actual:');
+    printList.printList();
+
+    console.log('\nAll doubly linked list tests passed!');
+}
+
+runTests();
